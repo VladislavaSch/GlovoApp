@@ -2,7 +2,6 @@ package ua.shcherbyna.springapp.repository.mapper;
 
 import org.springframework.jdbc.core.RowMapper;
 import ua.shcherbyna.springapp.dto.ProductDto;
-import ua.shcherbyna.springapp.models.Product;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

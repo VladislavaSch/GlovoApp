@@ -1,11 +1,11 @@
 package ua.shcherbyna.springapp.service;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.shcherbyna.springapp.dto.ProductDto;
 import ua.shcherbyna.springapp.repository.ProductRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,31 +14,33 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
 
     @Override
-    public ProductDto getProduct(int id) {
-        return productRepository.getById(id);
+    public Optional<ProductDto> getProduct(int id) {
+        return productRepository.findById(id);
     }
 
     public List<ProductDto> getAll() {
-        return productRepository.getAll();
+        List<ProductDto> products;
+        products = (List<ProductDto>)productRepository.findAll();
+        return products;
     }
 
     @Override
     public void addProduct(ProductDto product) {
-        productRepository.add(product);
+        productRepository.save(product);
     }
 
     @Override
     public void update(int id, ProductDto product) {
-        productRepository.updateById(id, product);
+        productRepository.save(product);
     }
 
     @Override
     public void delete(int id) {
-        productRepository.delete(id);
+        productRepository.deleteById(id);
     }
 
     @Override
-    public List<ProductDto> getByOrderId(int orderId) {
-        return productRepository.getByOrderId(orderId);
+    public List<ProductDto> getByOrderId(int id) {
+        return (List<ProductDto>)productRepository.getByOrderId(id);
     }
 }

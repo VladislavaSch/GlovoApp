@@ -5,6 +5,8 @@ import ua.shcherbyna.springapp.dto.OrderDto;
 import ua.shcherbyna.springapp.service.OrderService;
 
 import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
@@ -19,7 +21,8 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public OrderDto getOrder(@PathVariable("id") int id) {
-        return orderService.getOrder(id);
+        Optional<OrderDto> orderOpt = orderService.getOrder(id);
+        return orderOpt.orElseGet(OrderDto::new);
     }
 
     @PostMapping()

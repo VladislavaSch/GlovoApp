@@ -2,12 +2,10 @@ package ua.shcherbyna.springapp.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ua.shcherbyna.springapp.dto.OrderDto;
 import ua.shcherbyna.springapp.dto.ProductDto;
 import ua.shcherbyna.springapp.service.ProductService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
@@ -20,11 +18,10 @@ public class ProductController {
     public List<ProductDto> getAllProducts() {
         return productService.getAll();
     }
-//Change later
+
     @GetMapping("/{id}")
     public ProductDto getProduct(@PathVariable("id") int id) {
-        Optional<ProductDto> productDto = productService.getProduct(id);
-        return productDto.orElseGet(ProductDto::new);
+        return productService.getProduct(id);
     }
 
     @PostMapping()

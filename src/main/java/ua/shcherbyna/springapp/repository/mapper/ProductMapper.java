@@ -1,20 +1,17 @@
 package ua.shcherbyna.springapp.repository.mapper;
 
+import org.mapstruct.Mapper;
 import org.springframework.jdbc.core.RowMapper;
 import ua.shcherbyna.springapp.dto.ProductDto;
+import ua.shcherbyna.springapp.model.Product;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
-public class ProductMapper implements RowMapper<ProductDto> {
-    @Override
-    public ProductDto mapRow(ResultSet resultSet, int i) throws SQLException {
-        ProductDto product = new ProductDto();
-        product.setId(resultSet.getInt("id"));
-        product.setName(resultSet.getString("name"));
-        product.setCost(resultSet.getDouble("cost"));
-        product.setOrderId(resultSet.getInt("orders_key"));
-
-        return product;
-    }
+@Mapper
+public interface ProductMapper {
+    ProductDto toDto(Product entity);
+    Product toEntity(ProductDto dto);
+    List<ProductDto> toDtoList(List<Product> productList);
 }

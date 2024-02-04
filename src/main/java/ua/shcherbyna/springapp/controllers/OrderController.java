@@ -3,9 +3,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ua.shcherbyna.springapp.dto.OrderDto;
 import ua.shcherbyna.springapp.service.OrderService;
-
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/orders")
@@ -21,8 +19,7 @@ public class OrderController {
 
     @GetMapping("/{id}")
     public OrderDto getOrder(@PathVariable("id") int id) {
-        Optional<OrderDto> orderOpt = orderService.getOrder(id);
-        return orderOpt.orElseGet(OrderDto::new);
+        return orderService.getOrder(id);
     }
 
     @PostMapping()
@@ -32,7 +29,7 @@ public class OrderController {
 
     @PutMapping("/{id}")
     public void updateOrder(@PathVariable("id") int id, @RequestBody OrderDto order) {
-        orderService.update(id, order);
+        orderService.update(order);
     }
 
     @DeleteMapping("/{id}")

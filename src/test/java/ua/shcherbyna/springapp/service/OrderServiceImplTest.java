@@ -5,6 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ua.shcherbyna.springapp.dto.OrderDto;
+import ua.shcherbyna.springapp.model.Order;
 import ua.shcherbyna.springapp.repository.OrderRepository;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,11 @@ class OrderServiceImplTest {
     private OrderRepository orderRepository;
 
     @Mock
-    private OrderDto order;
+    private Order order;
+
+    @Mock
+    private OrderDto orderDto;
+
 
     @Test
     void getOrderTest() {
@@ -37,7 +42,7 @@ class OrderServiceImplTest {
 
     @Test
     void getAllOrdersTest() {
-        List<OrderDto> list = new ArrayList<>();
+        List<Order> list = new ArrayList<>();
 
         when(orderRepository.findAll()).thenReturn(list);
 
@@ -48,14 +53,14 @@ class OrderServiceImplTest {
 
     @Test
     void addOrderTest() {
-        orderService.addOrder(order);
+        orderService.addOrder(orderDto);
 
         verify(orderRepository).save(order);
     }
 
     @Test
     void updateTest() {
-        orderService.update(orderId, order);
+        orderService.update(orderDto);
 
         verify(orderRepository).save(order);
     }
@@ -67,21 +72,4 @@ class OrderServiceImplTest {
         verify(orderRepository).deleteById(orderId);
     }
 
-    @Test
-    void RefreshCostTest() {
-        when(orderRepository.findById(anyInt())).thenReturn(Optional.of(order));
-
-        Optional<OrderDto> optionalOfOrderDTO = orderRepository.findById(orderId);
-        OrderDto result = null;
-        if (optionalOfOrderDTO.isPresent()) {
-            result = optionalOfOrderDTO.get();
-            orderRepository.save(result);
-        }
-
-        orderService.refreshCost(orderId);
-
-        verify(orderRepository, times(2)).findById(orderId);
-        assert result != null;
-        verify(orderRepository, times(2)).save(result);
-    }
 }

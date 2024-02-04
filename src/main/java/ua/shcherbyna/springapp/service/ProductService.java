@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    Optional<ProductDto> getProduct(int id);
+    ProductDto getProduct(int id);
     List<ProductDto> getAll();
     void addProduct(ProductDto order);
     void update(int id, ProductDto order);

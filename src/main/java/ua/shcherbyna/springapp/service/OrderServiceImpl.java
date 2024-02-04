@@ -3,7 +3,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ua.shcherbyna.springapp.dto.OrderDto;
 import ua.shcherbyna.springapp.dto.ProductDto;
+import ua.shcherbyna.springapp.model.Order;
 import ua.shcherbyna.springapp.repository.OrderRepository;
+import ua.shcherbyna.springapp.repository.mapper.OrderMapper;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -13,26 +16,34 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductService productService;
+    private final OrderMapper orderMapper;
 
     @Override
-    public Optional <OrderDto> getOrder(int id) {
-        return orderRepository.findById(id);
+    public OrderDto getOrder(int id) {
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        Order order = new Order();
+        if(orderOptional.isPresent()) {
+            order = orderOptional.get();
+        }
+        return orderMapper.toDto(order);
     }
 
     @Override
     public List<OrderDto> getAllOrders() {
-        List<OrderDto> orders;
-        orders = (List<OrderDto>)orderRepository.findAll();
-       return orders;
+        List<Order> orderList = (List<Order>) orderRepository.findAll();
+        return orderMapper.toDtoList(orderList);
     }
 
+
     @Override
-    public void addOrder(OrderDto order) {
+    public void addOrder(OrderDto orderDto) {
+        Order order = orderMapper.toEntity(orderDto);
         orderRepository.save(order);
     }
 
     @Override
-    public void update(int id, OrderDto order) {
+    public void update(OrderDto orderDto) {
+        Order order = orderMapper.toEntity(orderDto);
         orderRepository.save(order);
     }
 
@@ -47,15 +58,14 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void refreshCost(int id) {
-        Optional<OrderDto> orderOpt = orderRepository.findById(id);
-        OrderDto order = orderOpt.orElseGet(OrderDto::new);
+        OrderDto orderDto = getOrder(id);
 
-        List<ProductDto> products = productService.getByOrderId(order.getId());
+        List<ProductDto> products = productService.getByOrderId(orderDto.getId());
             double cost = 0;
             for (ProductDto product : products) {
                 cost += product.getCost();
             }
-            order.setCost(cost);
-            update(id, order);
+            orderDto.setCost(cost);
+            update(orderDto);
         }
     }

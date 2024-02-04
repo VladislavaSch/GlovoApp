@@ -1,18 +1,20 @@
 package ua.shcherbyna.springapp.repository.mapper;
-
-import org.springframework.jdbc.core.RowMapper;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 import ua.shcherbyna.springapp.dto.OrderDto;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import ua.shcherbyna.springapp.model.Order;
+import java.util.List;
 
-public class OrderMapper implements RowMapper <OrderDto> {
+@Mapper
+public interface OrderMapper {
+    OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
+    @Mapping(source = "id", target = "id")
+    OrderDto toDto(Order order);
+    @Mapping(source = "id", target = "id")
+    Order toEntity(OrderDto dto);
 
-    @Override
-    public OrderDto mapRow(ResultSet resultSet, int i) throws SQLException {
-        OrderDto order = new OrderDto();
-        order.setId(resultSet.getInt("id"));
-        order.setDate(resultSet.getDate("date").toLocalDate());
-        order.setCost(resultSet.getDouble("cost"));
-        return order;
-    }
+    List<OrderDto> toDtoList(List<Order> orders);
+
+    List<Order> toEntityList(List<OrderDto> dtos);
 }

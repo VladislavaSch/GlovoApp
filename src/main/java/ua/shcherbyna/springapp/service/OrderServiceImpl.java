@@ -1,5 +1,6 @@
 package ua.shcherbyna.springapp.service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ua.shcherbyna.springapp.dto.OrderDto;
 import ua.shcherbyna.springapp.dto.ProductDto;
@@ -9,7 +10,7 @@ import ua.shcherbyna.springapp.repository.mapper.OrderMapper;
 
 import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -21,10 +22,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDto getOrder(int id) {
         Optional<Order> orderOptional = orderRepository.findById(id);
-        Order order = new Order();
-        if(orderOptional.isPresent()) {
-            order = orderOptional.get();
-        }
+        Order order = orderOptional.orElse(null);
+        if(order == null) log.error("There is no order with such ID");
         return orderMapper.toDto(order);
     }
 
@@ -39,20 +38,27 @@ public class OrderServiceImpl implements OrderService {
     public void addOrder(OrderDto orderDto) {
         Order order = orderMapper.toEntity(orderDto);
         orderRepository.save(order);
+        log.debug("Created new order with ID: " + order.getId());
     }
 
     @Override
     public void update(OrderDto orderDto) {
         Order order = orderMapper.toEntity(orderDto);
         orderRepository.save(order);
+        log.debug("Updated order with ID: " + order.getId());
     }
 
     @Override
     public void delete(int id) {
+        Optional<Order> orderOptional = orderRepository.findById(id);
+        Order order = orderOptional.orElse(null);
+        if(order == null) log.error("No order found");
+
         List<ProductDto> productsOfOrder = productService.getByOrderId(id);
         for (ProductDto product : productsOfOrder) {
             productService.delete(product.getId());
         }
+        log.trace("Deleted order with ID: " + id);
         orderRepository.deleteById(id);
     }
 

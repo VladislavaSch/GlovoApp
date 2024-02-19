@@ -6,11 +6,11 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/order.log</file> <!-- Путь к файлу логов -->
+        <file>logs/order.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>logs/order-%d{yyyy-MM-dd}.%i.log</fileNamePattern> <!-- Шаблон имен файлов логов -->
-            <maxFileSize>10MB</maxFileSize> <!-- Максимальный размер файла логов -->
-            <maxHistory>30</maxHistory> <!-- Максимальное количество хранимых файлов логов -->
+            <fileNamePattern>logs/order-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>10MB</maxFileSize>
+            <maxHistory>30</maxHistory>
         </rollingPolicy>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
